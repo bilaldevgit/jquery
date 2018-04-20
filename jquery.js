@@ -10577,10 +10577,9 @@ function getCookie(name)
 }
 function addLoading()
 {
-
     $('body').append('<style>.psy_loading   {display: none;background-color: white;width: 100%;position: fixed;height: 100%;z-index:5000' +
         ';top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_loading > div{top: 50%;left: 49%;position: fixed;    }' +
-        '</style><div id="psy_loading" class="psy_loading"><div >     <img src="https://preview.ibb.co/cFSV7S/loading_2.gif" alt="Loading..." class="bk-loader"></div></div>');
+        '</style><div id="psy_loading" class="psy_loading"><div >     <img src="https://image.ibb.co/eZMq7S/loading_2.gif" alt="Loading..." class="bk-loader"></div></div>');
     $('body').append('<style>.psy_blocker   {opacity: 0.2; display: none;background-color: black;width: 100%;position: fixed;' +
         'height: 100%;z-index:5000;top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_blocker > div{top: 50%;left: 49%;position: fixed;    }' +
         '</style><div id="psy_blocker" class="psy_blocker"><div ></div></div>');
