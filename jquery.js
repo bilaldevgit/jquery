@@ -10564,6 +10564,9 @@ function PsyProcessMessage(message)
         case 6 : //Pinfo
             getContent(onLoadPage);
             break;
+        case 7 : //Predirect
+            window.location.href = wsMessage.data;
+            break;
     }
 }
 
