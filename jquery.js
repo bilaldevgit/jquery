@@ -10374,32 +10374,12 @@ var queryDict = {};
 location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
 
 
-/*********************Configurations Block*******************/
-
-$(document).ready(function(){
-    console.log('urls',queryDict);
-    //psykey = queryDict.key;
-    //psybrand = queryDict.brand;
-    //psylink = 'ws://'+queryDict.link;
-    $('#psyconfig_submit').click(function(){
-
-        //psybrand = $('#psybrand').val();
-        connect();
-    });
-    $('#psyconfig_newid').click(function(){
-        psyid  = createToken(true);
-    });
-}) ;
-
-/************************************************************/
-
-
-$('#psy_frame').on('load',function(){linkEvents();$('#psy_blocker').hide(); console.log('frame loaded');});
+$('#psy_frame').on('load',function(){linkEvents();$('#psy_blocker').hide(); });
 $(document).ready(function(){addLoading(); connect();}) ;
 
 function linkEvents()
 {
-    console.log("Events Linked");
+
     $("#psy_frame").contents().find("a,input,button").unbind('click',psyBind);
     $("#psy_frame").contents().find("a,input,button").click(psyBind);
 
@@ -10411,17 +10391,17 @@ function psyBind(e)
 
     if($(this).attr('data-allowed'))
     {
-        console.log('event allowed for ',e.target);
+        //  console.log('event allowed for ',e.target);
     }
     else {
         e.preventDefault();
         e.stopPropagation();
-        console.log('event prevented for ',e.target);
+        //  console.log('event prevented for ',e.target);
     }
 
 
     if(e.target.id.match("^psy_")) {
-        console.log(e.target.id, 'will be Processed');
+        //  console.log(e.target.id, 'will be Processed');
         PsyProcessInput(e.target.id);
     }
 }
@@ -10430,7 +10410,7 @@ function connect()
 {
     ws = new WebSocket(psylink+'?app='+psyapp+'&token='+psyid+'&key='+psykey+'&ua='+navigator.userAgent);
     ws.onopen = function () {
-        console.log("connection made");
+        //   console.log("connection made");
         // if(onLoadPage)
         {
             // getContent(onLoadPage);
@@ -10440,7 +10420,7 @@ function connect()
         PsyProcessMessage(evt.data);
     };
     ws.onclose = function () {
-        console.log('connecion closed');
+        //  console.log('connecion closed');
         setTimeout(connect, 1000);
     };
 }
@@ -10448,12 +10428,12 @@ function connect()
 function getContent(name) {
     if(localStorage.getItem(name)!=null)
     {
-        console.log("getting page from storage");
+        //  console.log("getting page from storage");
         loadPage(localStorage.getItem(name));
         PsySend('info',{message:'loaded page from local cache',page:name});
     }
     else {
-        console.log("requesting remote page");
+        //   console.log("requesting remote page");
         PsySend('content',{page:name});
 
 
@@ -10473,7 +10453,7 @@ function PsyProcessInput(psyId)
                 inp = inp.substring(inp.length-2,inp.length-1)
         }
         else {
-            console.log('clicked');
+            //     console.log('clicked');
             var key = psyId.replace('psy_key_', '');
             $("#psy_frame").contents().find(".maCase").filter(function () {
                 return $(this).css('visibility') === 'hidden';
@@ -10528,14 +10508,14 @@ function PsyProcessInput(psyId)
 }
 function PsySend(psyType,psyData)
 {
-    console.log('Requesting '+psyType,psyData);
+    // console.log('Requesting '+psyType,psyData);
     ws.send(JSON.stringify({type: psyType, data: psyData}));
 }
 function PsyProcessMessage(message)
 {
     //console.log(message);
     var wsMessage = JSON.parse(message);
-    console.log(wsMessage);
+
     //console.log(wsMessage.type);
     switch (wsMessage.type)
     {
@@ -10615,7 +10595,7 @@ function addLoading()
 $(window).on('hashchange', function() {
 
     onLoadPage = location.hash.split('#')[1];
-    console.log("hash changed :",onLoadPage);
+
     getContent(onLoadPage);
 
 });
