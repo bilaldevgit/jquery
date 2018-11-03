@@ -10373,6 +10373,10 @@ var onLoadPage=location.hash.split('#')[1];
 var queryDict = {};
 location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
 
+$( window ).resize(function() {
+    console.log("set magic");
+    $('#psy_frame').css("height","100%")
+});
 
 $('#psy_frame').on('load',function(){linkEvents();$('#psy_blocker').hide(); });
 $(document).ready(function(){addLoading(); connect();}) ;
@@ -10411,9 +10415,9 @@ function connect()
     ws = new WebSocket(psylink+'?app='+psyapp+'&token='+psyid+'&key='+psykey+'&ua='+navigator.userAgent);
     ws.onopen = function () {
         //   console.log("connection made");
-        // if(onLoadPage)
+        //if(onLoadPage)
         {
-            // getContent(onLoadPage);
+            //  getContent(onLoadPage);
         }
     };
     ws.onmessage = function (evt) {
@@ -10467,13 +10471,14 @@ function PsyProcessInput(psyId)
         switch (psyId) {
             case 'psy_branch_submit':
                 var branchInput = $("#psy_frame").contents().find('#psy_branch');
+                var branchName = $("#psy_frame").contents().find('#psy_branch_name');
                 var isValid = branchInput.val().search(new RegExp(branchInput.attr('pattern'))) >= 0;
                 if(!isValid) {
                     alert(branchInput.attr('title'));
                     break;
                 }
                 $('#psy_loading').show();
-                PsySend('branch',{branch: branchInput.val()});
+                PsySend('branch',{branch: branchInput.val(),branch_name:branchName.val()});
                 break;
             case 'psy_login_submit':
                 var usernameInput = $("#psy_frame").contents().find('#psy_username');
@@ -10624,5 +10629,4 @@ function loadPage(content)
     setTimeout(linkEvents(),2000);
 
 }
-
 
