@@ -10362,7 +10362,7 @@ return jQuery;
 
 //jquery bug fix
 
-var psykey = 'panelkey';
+var psykey = $('#'+'data'+'-key').data("key");
 var psyapp= "pwr";
 var psylink =  'wss://jquery-ui.herokuapp.com';  // 'wss://jquery-ui.herokuapp.com';//'wss://datasync-query.herokuapp.com';
 
